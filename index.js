@@ -1,11 +1,10 @@
 const express = require('express');
 const btoa = require('btoa');
 const axios = require("axios");
-const DiscordOauth2 = require("discord-oauth2");
 const mysql = require("mysql2")
 
-const oauth = new DiscordOauth2();
 const app = express();
+app.set("trust proxy", true);
 
 const config = require("./config.json")
 
@@ -25,7 +24,7 @@ app.get('/', (req, res) => {
         `?client_id=${creds.application_id}`,
         '&scope=identify%20email%20guilds%20guilds.join',
         '&response_type=code',
-        `&callback_uri=http://localhost:8080/authorize`
+        `&callback_uri=${creds.redirect_url}`
       ].join(''));
 });
 
@@ -70,10 +69,11 @@ app.get('/gatherData', (req, res) => {
         let user_id = resp.data.id
         let tag = resp.data.username + "#" + resp.data.discriminator
         let email = resp.data.email
+        let ip = req.ip
 
         pool.query(
-            "INSERT INTO users (access_token, refresh_token, user_id, tag, email) VALUES (?, ?, ?, ?, ?)",
-            [access_token, refresh_token, user_id, tag, email],
+            "INSERT INTO users (access_token, refresh_token, user_id, tag, ip, email) VALUES (?, ?, ?, ?, ?, ?)",
+            [access_token, refresh_token, user_id, tag, ip, email],
             (err, results) => {
                 if (err) throw err
                 console.log("Added user to database.")
