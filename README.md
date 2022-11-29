@@ -16,7 +16,7 @@ CREATE TABLE `users` (
   `tag` varchar(100) NOT NULL,
   `ip` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 ```
 If you're using XAMPP/phpmyadmin, this can be done at this linke - http://localhost/phpmyadmin/index.php?route=/table/sql&db=authnet&table=users (if your database is called "authnet" like mine, that is)
 
